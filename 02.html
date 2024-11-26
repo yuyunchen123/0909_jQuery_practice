@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
+      .section {
+        position: relative;
+        height: 320px;
+        width: 320px;
+        margin: 10px;
+        padding: 10px;
+      }
+      .block {
+        width: 100px;
+        height: 100px;
+        background-color: rgb(226, 200, 67);
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+      }
+      .block01 {
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        position: absolute;
+        left: 120px;
+      }
+      .block02 {
+        border-bottom-right-radius: 30px;
+        border-top-right-radius: 30px;
+        position: absolute;
+        left: 230px;
+        top: 120px;
+      }
+      .block03 {
+        border-bottom-right-radius: 30px;
+        border-bottom-left-radius: 30px;
+        position: absolute;
+        left: 120px;
+        top: 230px;
+      }
+      .block04 {
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        position: absolute;
+        top: 120px;
+      }
+      .active {
+        background-color: rgb(242, 87, 16);
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+    1. 請設計 HTML 架構與 CSS 樣式，再使用 jQuery 做動作
+    2.做出一個類似座位的順序選擇器的功能
+    3.鍵盤的向右鍵按了會依位次選取，到最後一個座位後會換下一桌，到最後一個座位後就停在最後一個位置
+    4.鍵盤的向左鍵按了會依位次反向選取，到第一個座位後會換上一桌，到最前一個座位後就停在最前一個位置
+    5.與第一個作業不同的是，在座位選取前，會先選擇包著座位的桌子
+    6.注意反向的時候，桌子的選擇也需要納入
+    7.最後再用原生 javaScript 寫一遍 -->
+    <div class="section section1">
+      <div class="block block01">1</div>
+      <div class="block block02">2</div>
+      <div class="block block03">3</div>
+      <div class="block block04">4</div>
+    </div>
+
+    <div class="section section2">
+      <div class="block block01">1</div>
+      <div class="block block02">2</div>
+      <div class="block block03">3</div>
+      <div class="block block04">4</div>
+    </div>
+
+    <div class="section section3">
+      <div class="block block01">1</div>
+      <div class="block block02">2</div>
+      <div class="block block03">3</div>
+      <div class="block block04">4</div>
+    </div>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+
+    <!-- <script>
+      $(document).on("keyup", (e) => {
+        if (e.key === "ArrowRight") {
+          // 找到當前的 active 元素
+          let currentActive = $(".active");
+
+          if (currentActive.length === 0) {
+            // 如果沒有 active，從第一個 section 開始
+            $(".section1").addClass("active");
+            //console.log(currentActive);
+          } else {
+            // 移除當前的 active 樣式
+            currentActive.removeClass("active");
+
+            // 如果當前的 active 是 section，則開始進入 block
+            if (currentActive.hasClass("section")) {
+              currentActive.find(".block01").addClass("active");
+            } else if (currentActive.hasClass("block04")) {
+              // 如果當前是 block04，移動到下一個 section 的 block01
+              let currentSection = currentActive.closest(".section");
+
+              if (currentSection.hasClass("section3")) {
+                // 如果到達 section3 的 block04，停止
+                currentActive.addClass("active");
+              } else {
+                // 切換到下一個 section，並為該 section 添加 active 樣式
+                let nextSection = currentSection.next(".section");
+                nextSection.addClass("active");
+              }
+            } else {
+              // 移動到當前 section 中的下一個 block
+              currentActive.next(".block").addClass("active");
+            }
+          }
+        }
+
+        if (e.key === "ArrowLeft") {
+
+          let currentActive = $(".active");
+
+          if (currentActive.length === 0) {
+            // 如果沒有 active，從最後一個 section 的 block04 開始
+            $(".section3 .block04").addClass("active");
+          } else {
+           
+            currentActive.removeClass("active");
+
+            // 如果 active 是 block01，移動到該層的 section
+            if (currentActive.hasClass("block01")) {
+              currentActive.closest(".section").addClass("active"); 
+              
+            } else if (currentActive.hasClass("section")) {
+              // 如果 active 是 section，移動到上一個 section 的 block04
+              let prevSection = currentActive.prev(".section");
+
+              if (prevSection.length > 0) {
+                prevSection.find(".block04").addClass("active"); // 到上一個 section 的 block04
+              } else {
+                // 如果沒有上一個 section，保持當前 section active
+                currentActive.addClass("active");
+              }
+            }  else  {
+              // 移動到當前 section 的上一個 block
+              currentActive.prev(".block").addClass("active");
+            }
+          }
+        }
+      });
+    </script> -->
+
+    <script>
+      document.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowRight") {
+         
+          let currentActive = document.querySelector(".active");
+
+          if (!currentActive) {
+            // 如果沒有 active，從第一個 section 開始
+            document.querySelector(".section1").classList.add("active");
+
+          } else {
+            
+            currentActive.classList.remove("active");
+
+            // 如果 active 是 section，則開始進入 block
+            if (currentActive.classList.contains("section")) {
+              currentActive.querySelector(".block01").classList.add("active");
+            } else if (currentActive.classList.contains("block04")) {
+
+              // 如果是 block04，移動到下一個 section 的 block01
+              let currentSection = currentActive.closest(".section");
+
+              if (currentSection.classList.contains("section3")) {
+                // 如果到達 section3 的 block04，停止
+                currentActive.classList.add("active");
+              } else {
+                // 切換到下一個 section，並為 section 添加 active 樣式
+                let nextSection = currentSection.nextElementSibling;
+                if (nextSection && nextSection.classList.contains("section")) {
+                  nextSection.classList.add("active");
+                }
+              }
+            } else {
+              // 移動到 section 中的下一個 block
+              let nextBlock = currentActive.nextElementSibling;
+              if (nextBlock && nextBlock.classList.contains("block")) {
+                nextBlock.classList.add("active");
+              }
+            }
+          }
+        }
+
+        if (e.key === "ArrowLeft") {
+          let currentActive = document.querySelector(".active");
+
+          if (!currentActive) {
+            // 如果沒有 active，從最後一個 section 的 block04 開始
+            document
+              .querySelector(".section3 .block04")
+              .classList.add("active");
+
+          } else {
+            currentActive.classList.remove("active");
+
+            // 如果 active 是 block01，移動到該層的 section
+            if (currentActive.classList.contains("block01")) {
+              currentActive.closest(".section").classList.add("active");
+              
+            } else if (currentActive.classList.contains("section")) {
+              // 如果 active 是 section，移動到上一個 section 的 block04
+              let prevSection = currentActive.previousElementSibling;
+
+              if (prevSection && prevSection.classList.contains("section")) {
+                prevSection.querySelector(".block04").classList.add("active");
+              } else {
+                // 如果沒有上一個 section，保持當前 section active
+                currentActive.classList.add("active");
+              }
+            } else {
+              // 移動到 section 的上一個 block
+              let prevBlock = currentActive.previousElementSibling;
+              if (prevBlock && prevBlock.classList.contains("block")) {
+                prevBlock.classList.add("active");
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
